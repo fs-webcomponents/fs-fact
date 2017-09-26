@@ -47,6 +47,15 @@
         return {
           fact: Object,
           
+          /**
+           * The entity type that the fact types should be limited to.
+           * Valid values are: `person`, `couple`, `capr` (child-and-parents relationship).
+           */
+          entityType: {
+            type: String,
+            value: 'person'
+          },
+          
           editable: {
             type: Boolean,
             value: false,

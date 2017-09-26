@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../polymer/lib/elements/dom-if.html">
+<link rel="import" href="../vaadin-combo-box/vaadin-combo-box.html">
 
 <dom-module id="fs-fact-type">
   <template>
@@ -8,31 +9,170 @@
         display: block;
       }
     </style>
-    <div>{{type}}</div>
+    <div hidden$="[[edit]]">{{_factTypeDisplay(entityType, type)}}</div>
+    <template is="dom-if" if="[[edit]]">
+      <vaadin-combo-box id="select" 
+        label="Type" 
+        allow-custom-value
+        no-label-float></vaadin-combo-box>
+    </template>
   </template>
 
   <script>
-    /**
-     * `fs-fact-type`
-     * 
-     *
-     * @customElement
-     * @polymer
-     * @demo demo/index.html
-     */
-    class FsFactType extends Polymer.Element {
-      static get is() { return 'fs-fact-type'; }
-      static get properties() {
-        return {
-          type: String,
-          edit: {
-            type: Boolean,
-            value: false
+    (function(){
+      
+      /**
+       * Track available preset types, their display text, and
+       * whether they are a person, couple, or parent-child type.
+       */
+      const types = {
+        person: {
+          'http://gedcomx.org/BarMitzvah': 'Bar Mitzvah',
+          'http://gedcomx.org/BatMitzvah': 'Bat Mitzvah',
+          'http://gedcomx.org/Birth': 'Birth',
+          'http://gedcomx.org/Burial': 'Burial',
+          'http://gedcomx.org/Caste': 'Caste',
+          'http://gedcomx.org/Christening': 'Christening',
+          'http://gedcomx.org/Clan': 'Clan',
+          'http://gedcomx.org/Cremation': 'Cremation',
+          'http://gedcomx.org/Death': 'Death',
+          'http://gedcomx.org/Ethnicity': 'Ethnicity',
+          'http://gedcomx.org/MilitaryService': 'Military Service',
+          'http://gedcomx.org/NationalId': 'National Id',
+          'http://gedcomx.org/Nationality': 'Nationality',
+          'http://gedcomx.org/Naturalization': 'Naturalization',
+          'http://gedcomx.org/Occupation': 'Occupation',
+          'http://gedcomx.org/PhysicalDescription': 'Physical Description',
+          'http://gedcomx.org/Religion': 'Religion',
+          'http://gedcomx.org/Residence': 'Residence',
+          'http://gedcomx.org/Stillbirth': 'Stillbirth',
+          'http://familysearch.org/v1/Affiliation': 'Affiliation',
+          'http://familysearch.org/v1/DiedBeforeEight': 'Died Before Eight',
+          'http://familysearch.org/v1/TitleOfNobility': 'Title Of Nobility',
+          'http://familysearch.org/v1/TribeName': 'Tribe Name'
+        },
+        couple: {
+          'http://gedcomx.org/Annulment': 'Annulment',
+          'http://gedcomx.org/CommonLawMarriage': 'Common Law Marriage',
+          'http://gedcomx.org/Divorce': 'Divorce',
+          'http://gedcomx.org/Marriage': 'Marriage'
+        },
+        capr: {
+          'http://gedcomx.org/AdoptiveParent': 'Adoptive Parent',
+          'http://gedcomx.org/BiologicalParent': 'Biological Parent',
+          'http://gedcomx.org/FosterParent': 'Foster Parent',
+          'http://gedcomx.org/GuardianParent': 'Guardian Parent',
+          'http://gedcomx.org/StepParent': 'Step Parent',
+        }
+      };
+      
+      /**
+       * `fs-fact-type`
+       * 
+       *
+       * @customElement
+       * @polymer
+       * @demo demo/index.html
+       */
+      class FsFactType extends Polymer.Element {
+        static get is() { return 'fs-fact-type'; }
+        static get properties() {
+          return {
+            type: String,
+            
+            /**
+             * The entity type that the fact types should be limited to.
+             * Valid values are: `person`, `couple`, `capr` (child-and-parents relationship).
+             */
+            entityType: {
+              type: String,
+              value: 'person'
+            },
+            
+            /** Whether in edit mode */
+            edit: {
+              type: Boolean,
+              value: false,
+              observer: '_setupEdit'
+            },
+            
+            /** Whether the fact type is a custom value */
+            custom: {
+              type: Boolean,
+              value: false,
+              readOnly: true,
+              reflectToAttribute: true
+            }
+          };
+        }
+        static get observers() {
+          return [
+            '_customObserver(entityType, type)'
+          ];
+        }
+        
+        _factTypeDisplay(entityType, factType) {
+          if(this._isCustom(entityType, factType)) {
+            return factType;
+          } else {
+            return types[entityType][factType];
           }
-        };
+        }
+        
+        _customObserver(entityType, type) {
+          this._setCustom(this._isCustom(entityType, type));
+        }
+        
+        /** Whether a type is custom */
+        _isCustom(entityType, factType) {
+          return !(types[entityType] && types[entityType][factType]);
+        }
+        
+        _setupEdit(edit) {
+          if(edit) {
+            Polymer.Async.microTask.run(() => {
+              const select = this.shadowRoot.querySelector('#select');
+              const entityTypes = types[this.entityType];
+              let selected;
+              let item;
+              
+              // Populate the select box with types and watch for the selected value
+              select.items = Object.keys(entityTypes).reduce((accumulator, key) => {
+                item = {
+                  value: key,
+                  label: entityTypes[key]
+                };
+                accumulator.push(item);
+                if(key === this.type) {
+                  selected = item;
+                }
+                return accumulator;
+              }, []);
+              
+              // Set the selected value
+              if(selected) {
+                select.selectedItem = selected;
+              } else {
+                select.value = this.type;
+              }
+              
+              // Listen for change events
+              select.addEventListener('selected-item-changed', (e) => {
+                if(e.detail.value) {
+                  this.type = e.detail.value.value;
+                }
+              });
+              select.addEventListener('custom-value-set', (e) => {
+                if(e.detail) {
+                  this.type = e.detail;
+                }
+              });
+            });
+          }
+        }
       }
-    }
 
-    window.customElements.define(FsFactType.is, FsFactType);
+      window.customElements.define(FsFactType.is, FsFactType);
+    })();
   </script>
 </dom-module>
