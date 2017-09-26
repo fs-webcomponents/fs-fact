@@ -5,7 +5,8 @@
     "polymer": "Polymer/polymer#^2.0.0",
     "fs-date": "fs-webcomponents/fs-date",
     "fs-place": "fs-webcomponents/fs-place",
-    "vaadin-combo-box": "^2.0.0"
+    "vaadin-combo-box": "^2.0.0",
+    "fs-attribution": "fs-webcomponents/fs-attribution"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
