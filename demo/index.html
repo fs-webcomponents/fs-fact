@@ -36,6 +36,23 @@
           </script>
         </template>
       </demo-snippet>
+      <h3>Editable fs-fact</h3>
+      <demo-snippet>
+        <template>
+          <fs-fact id="editable" editable></fs-fact>
+          <script>
+            document.getElementById('editable').fact = {
+              type: 'http://gedcomx.org/Birth',
+              date: {
+                original: 'June 4, 1846'
+              },
+              place: {
+                original: 'Cleveland, Ohio'
+              }
+            };
+          </script>
+        </template>
+      </demo-snippet>
     </div>
   </body>
 </html>

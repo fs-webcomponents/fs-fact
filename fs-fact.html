@@ -1,4 +1,7 @@
 <link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/elements/dom-if.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../fs-date/fs-date.html">
 <link rel="import" href="../fs-place/fs-place.html">
 
@@ -7,8 +10,24 @@
     <style>
       :host {
         display: block;
+        overflow: auto;
+      }
+      
+      paper-icon-button {
+        display: none;
+        width: 24px;
+        height: 24px;
+        float: right;
+        padding: 4px;
+      }
+      
+      :host(:hover) paper-icon-button {
+        display: block;
       }
     </style>
+    <template is="dom-if" if="[[editable]]">
+      <paper-icon-button icon="create"></paper-icon-button>
+    </template>
     <fs-date date="{{fact.date}}"></fs-date>
     <fs-place place="{{fact.place}}"></fs-place>
   </template>
@@ -26,7 +45,12 @@
       static get is() { return 'fs-fact'; }
       static get properties() {
         return {
-          fact: Object
+          fact: Object,
+          
+          editable: {
+            type: Boolean,
+            value: false
+          }
         };
       }
     }
