@@ -26,10 +26,10 @@
       }
     </style>
     <template is="dom-if" if="[[editable]]">
-      <paper-icon-button icon="create"></paper-icon-button>
+      <paper-icon-button id="edit" icon="create"></paper-icon-button>
     </template>
-    <fs-date date="{{fact.date}}"></fs-date>
-    <fs-place place="{{fact.place}}"></fs-place>
+    <fs-date date="{{fact.date}}" edit="[[edit]]"></fs-date>
+    <fs-place place="{{fact.place}}" edit="[[edit]]"></fs-place>
   </template>
 
   <script>
@@ -49,9 +49,25 @@
           
           editable: {
             type: Boolean,
+            value: false,
+            observer: '_setupEditable'
+          },
+          
+          edit: {
+            type: Boolean,
             value: false
           }
         };
+      }
+      
+      _setupEditable(editable) {
+        if(editable) {
+          Polymer.Async.microTask.run(() => {
+            this.shadowRoot.querySelector('#edit').addEventListener('click', () => {
+              this.edit = true;
+            });
+          });
+        }
       }
     }
 
