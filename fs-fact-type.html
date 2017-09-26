@@ -1,0 +1,38 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/elements/dom-if.html">
+
+<dom-module id="fs-fact-type">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <div>{{type}}</div>
+  </template>
+
+  <script>
+    /**
+     * `fs-fact-type`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class FsFactType extends Polymer.Element {
+      static get is() { return 'fs-fact-type'; }
+      static get properties() {
+        return {
+          type: String,
+          edit: {
+            type: Boolean,
+            value: false
+          }
+        };
+      }
+    }
+
+    window.customElements.define(FsFactType.is, FsFactType);
+  </script>
+</dom-module>
