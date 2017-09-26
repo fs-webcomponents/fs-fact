@@ -1,0 +1,36 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../fs-date/fs-date.html">
+<link rel="import" href="../fs-place/fs-place.html">
+
+<dom-module id="fs-fact">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <fs-date date="{{fact.date}}"></fs-date>
+    <fs-place place="{{fact.place}}"></fs-place>
+  </template>
+
+  <script>
+    /**
+     * `fs-fact`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class FsFact extends Polymer.Element {
+      static get is() { return 'fs-fact'; }
+      static get properties() {
+        return {
+          fact: Object
+        };
+      }
+    }
+
+    window.customElements.define(FsFact.is, FsFact);
+  </script>
+</dom-module>
