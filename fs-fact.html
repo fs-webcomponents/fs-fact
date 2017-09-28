@@ -55,7 +55,10 @@
       static get is() { return 'fs-fact'; }
       static get properties() {
         return {
-          fact: Object,
+          fact: {
+            type: Object,
+            notify: true
+          },
           
           /**
            * The entity type that the fact types should be limited to.

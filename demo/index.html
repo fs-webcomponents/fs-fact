@@ -41,7 +41,8 @@
         <template>
           <fs-fact id="editable" editable></fs-fact>
           <script>
-            document.getElementById('editable').fact = {
+            const fact = document.getElementById('editable');
+            fact.fact = {
               type: 'http://gedcomx.org/Birth',
               date: {
                 original: 'June 4, 1846'
@@ -58,6 +59,9 @@
                 modified: 1408134300475
               }
             };
+            fact.addEventListener('fact-changed', (e) => {
+              console.log('fact-changed', e.detail.path, e.detail.value);
+            });
           </script>
         </template>
       </demo-snippet>
