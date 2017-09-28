@@ -1,7 +1,7 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../polymer/lib/elements/dom-if.html">
 <link rel="import" href="../paper-input/paper-input.html">
-<link rel="import" href="fs-fact-type.html">
+<link rel="import" href="fs-fact-types.html">
 <link rel="import" href="fs-fact-value.html">
 <link rel="import" href="../fs-date/fs-date.html">
 <link rel="import" href="../fs-place/fs-place.html">
@@ -30,7 +30,7 @@
         <a id="close" href hidden$="[[!edit]]">Close</a>
       </div>
     </template>
-    <fs-fact-type type="{{fact.type}}" edit="[[edit]]"></fs-fact-type>
+    <div>{{_factTypeDisplay(fact.type)}}</div>
     <fs-fact-value value="{{fact.value}}" edit="[[edit]]"></fs-fact-value>
     <fs-date date="{{fact.date}}" edit="[[edit]]"></fs-date>
     <fs-place place="{{fact.place}}" edit="[[edit]]"></fs-place>
@@ -95,6 +95,10 @@
             });
           });
         }
+      }
+      
+      _factTypeDisplay(type) {
+        return FsFactTypes.displayName(type);
       }
     }
 
