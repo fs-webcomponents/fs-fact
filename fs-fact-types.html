@@ -373,6 +373,36 @@
       }
       
       /**
+       * Check whether a given type supports the value property
+       * 
+       * @param {String} type
+       * @return {Boolean}
+       */
+      static supportsValue(type) {
+        return this.isCustom(type) || this.type(type).value;
+      }
+      
+      /**
+       * Check whether a given type supports the date property
+       * 
+       * @param {String} type
+       * @return {Boolean}
+       */
+      static supportsDate(type) {
+        return this.isCustom(type) || this.type(type).date;
+      }
+      
+      /**
+       * Check whether a given type supports the place property
+       * 
+       * @param {String} type
+       * @return {Boolean}
+       */
+      static supportsPlace(type) {
+        return this.isCustom(type) || this.type(type).place;
+      }
+      
+      /**
        * Get a list of types matching the given entity type
        * 
        * @param {String} entity
@@ -387,24 +417,28 @@
        * Build an index to the types by their type
        */
       static _buildTypeIndex() {
-        this._typeIndex = types.reduce((index, type) => {
-          index[type.type] = type;
-          return index;
-        }, {});
+        if(!this._typeIndex) {
+          this._typeIndex = types.reduce((index, type) => {
+            index[type.type] = type;
+            return index;
+          }, {});
+        }
       }
       
       /**
        * Build an index to the types grouped by entity
        */
       static _buildEntityIndex() {
-        this._entityIndex = types.reduce((index, type) => {
-          index[type.entity].push(type);
-          return index;
-        }, {
-          person: [],
-          couple: [],
-          capr: []
-        });
+        if(!this._entityIndex) {
+          this._entityIndex = types.reduce((index, type) => {
+            index[type.entity].push(type);
+            return index;
+          }, {
+            person: [],
+            couple: [],
+            capr: []
+          });
+        }
       }
     };
   })();

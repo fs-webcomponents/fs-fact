@@ -65,6 +65,60 @@
           </script>
         </template>
       </demo-snippet>
+      <h3>Editable fs-fact; value only</h3>
+      <demo-snippet>
+        <template>
+          <fs-fact id="no-place" editable edit></fs-fact>
+          <script>
+            const noPlace = document.getElementById('no-place');
+            noPlace.fact = {
+              type: 'http://gedcomx.org/Nationality',
+              value: 'Ukrainian',
+              attribution: {
+                contributor: {
+                  resource: "https://integration.familysearch.org/platform/users/agents/MMJF-TLW",
+                  resourceId: "MMJF-TLW"
+                },
+                changeMessage: "Because because",
+                modified: 1408134300475
+              }
+            };
+            noPlace.addEventListener('fact-changed', (e) => {
+              console.log('fact-changed', e.detail.path, e.detail.value);
+            });
+          </script>
+        </template>
+      </demo-snippet>
+      <h3>Editable custom type</h3>
+      <demo-snippet>
+        <template>
+          <fs-fact id="custom" editable edit></fs-fact>
+          <script>
+            const custom = document.getElementById('custom');
+            custom.fact = {
+              type: 'data:;Custom event',
+              value: 'Promoted',
+              date: {
+                original: 'June 4, 1846'
+              },
+              place: {
+                original: 'Cleveland, Ohio'
+              },
+              attribution: {
+                contributor: {
+                  resource: "https://integration.familysearch.org/platform/users/agents/MMJF-TLW",
+                  resourceId: "MMJF-TLW"
+                },
+                changeMessage: "Because because",
+                modified: 1408134300475
+              }
+            };
+            custom.addEventListener('fact-changed', (e) => {
+              console.log('fact-changed', e.detail.path, e.detail.value);
+            });
+          </script>
+        </template>
+      </demo-snippet>
     </div>
   </body>
 </html>

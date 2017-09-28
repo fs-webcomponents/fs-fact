@@ -31,9 +31,15 @@
       </div>
     </template>
     <div>{{_factTypeDisplay(fact.type)}}</div>
-    <fs-fact-value value="{{fact.value}}" edit="[[edit]]"></fs-fact-value>
-    <fs-date date="{{fact.date}}" edit="[[edit]]"></fs-date>
-    <fs-place place="{{fact.place}}" edit="[[edit]]"></fs-place>
+    <template is="dom-if" if="{{_supportsValue(fact.type)}}">
+      <fs-fact-value value="{{fact.value}}" edit="[[edit]]"></fs-fact-value>
+    </template>
+    <template is="dom-if" if="{{_supportsDate(fact.type)}}">
+      <fs-date date="{{fact.date}}" edit="[[edit]]"></fs-date>
+    </template>
+    <template is="dom-if" if="{{_supportsPlace(fact.type)}}">
+      <fs-place place="{{fact.place}}" edit="[[edit]]"></fs-place>
+    </template>
     <template is="dom-if" if="[[editable]]">
       <fs-attribution 
         hidden$="[[!edit]]" 
@@ -99,6 +105,18 @@
       
       _factTypeDisplay(type) {
         return FsFactTypes.displayName(type);
+      }
+      
+      _supportsPlace(type) {
+        return FsFactTypes.supportsPlace(type);
+      }
+      
+      _supportsDate(type) {
+        return FsFactTypes.supportsDate(type);
+      }
+      
+      _supportsValue(type) {
+        return FsFactTypes.supportsValue(type);
       }
     }
 
