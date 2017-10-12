@@ -1,0 +1,70 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="fs-fact-types.html">
+
+<dom-module id="fs-fact-types-menu">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <paper-dropdown-menu label="Fact Type" no-label-float on-selected-item-changed="_selectionChange">
+      <paper-listbox id="list" slot="dropdown-content">
+        <template is="dom-repeat" items="{{factTypes}}">
+          <paper-item fact-type="{{item.type}}" label="{{item.name}}" on-iron-select="_ironSelect" on-tap="_itemTapped">{{item.name}}</paper-item>
+        </template>
+      </paper-listbox>
+    </paper-dropdown-menu>
+  </template>
+  <script>
+    /**
+     * `fs-fact-types-menu`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class FsFactTypesMenu extends Polymer.Element {
+      static get is() { return 'fs-fact-types-menu'; }
+      static get properties() {
+        return {
+          value: {
+            type: String,
+            notify: true
+          },
+          entityType: {
+            type: String,
+            value: 'person'
+          },
+          factTypes: {
+            type: Array,
+            readOnly: true,
+            value: function(){
+              return [];
+            }
+          }
+        };
+      }
+      static get observers() {
+        return [
+          '_updateFactTypes(entityType)'
+        ];
+      }
+      
+      _updateFactTypes(entityType) {
+        this._setFactTypes(FsFactTypes.types().filter(t => t.entity === entityType));
+      }
+      
+      _selectionChange(event) {
+        this.value = event.detail.value.factType;
+      }
+      
+    }
+
+    window.customElements.define(FsFactTypesMenu.is, FsFactTypesMenu);
+  </script>
+</dom-module>

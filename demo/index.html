@@ -11,6 +11,7 @@
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
     <link rel="import" href="../fs-fact.html">
+    <link rel="import" href="../fs-fact-types-menu.html">
 
     <custom-style>
       <style is="custom-style" include="demo-pages-shared-styles">
@@ -117,6 +118,12 @@
               console.log('fact-changed', e.detail.path, e.detail.value);
             });
           </script>
+        </template>
+      </demo-snippet>
+      <h3>Fact type menu</h3>
+      <demo-snippet>
+        <template>
+          <fs-fact-types-menu></fs-fact-types-menu>
         </template>
       </demo-snippet>
     </div>
