@@ -5,6 +5,7 @@
 <link rel="import" href="fs-fact-value.html">
 <link rel="import" href="../fs-date/fs-date.html">
 <link rel="import" href="../fs-place/fs-place.html">
+<link rel="import" href="../fs-request/fs-request.html">
 <link rel="import" href="../fs-attribution/fs-attribution.html">
 
 <dom-module id="fs-fact">
@@ -28,6 +29,7 @@
       <div class="toolbar">
         <a id="edit" href hidden$="[[edit]]">Edit</a>
         <a id="close" href hidden$="[[!edit]]">Close</a>
+        <a id="save" href hidden$="[[!_showSaveButton(edit, saveUrl)]]">Save</a>
       </div>
     </template>
     <div>{{_factTypeDisplay(fact.type)}}</div>
@@ -61,29 +63,44 @@
       static get is() { return 'fs-fact'; }
       static get properties() {
         return {
+          
+          /** Fact data */
           fact: {
             type: Object,
             notify: true
           },
           
           /**
-           * The entity type that the fact types should be limited to.
-           * Valid values are: `person`, `couple`, `capr` (child-and-parents relationship).
+           * Whether the fact can be edited. This will show a toolbar when the
+           * user hovers over the fact.
            */
-          entityType: {
-            type: String,
-            value: 'person'
-          },
-          
           editable: {
             type: Boolean,
             value: false,
             observer: '_setupEditable'
           },
           
+          /**
+           * Whether the fact is currently in edit mode
+           */
           edit: {
             type: Boolean,
             value: false
+          },
+          
+          /**
+           * The URL that the fact data will be saved to.
+           */
+          saveUrl: String,
+          
+          /**
+           * Whether the fact is being saved
+           */
+          saving: {
+            type: Boolean,
+            value: false,
+            readOnly: true,
+            notify: true
           }
         };
       }
@@ -99,8 +116,30 @@
               this.edit = false;
               e.preventDefault();
             });
+            this.shadowRoot.querySelector('#save').addEventListener('click', (e) => {
+              this.edit = false;
+              e.preventDefault();
+              if(this.saveUrl) {
+                const request = new FSRequest();
+                request.url = this.saveUrl;
+                request.method = 'POST';
+                request.body = {
+                  persons: [{
+                    facts: [this.fact]
+                  }]
+                };
+                request.addEventListener('loading-changed', (e) => {
+                  this._setSaving(e.detail.value);
+                });
+                request.generateRequest();
+              }
+            });
           });
         }
+      }
+      
+      _showSaveButton(edit, saveUrl) {
+        return edit && saveUrl;
       }
       
       _factTypeDisplay(type) {

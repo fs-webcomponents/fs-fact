@@ -120,6 +120,35 @@
           </script>
         </template>
       </demo-snippet>
+      <h3>Editable fs-fact save enabled</h3>
+      <demo-snippet>
+        <template>
+          <fs-fact id="saveable" editable save-url="/platform/tree/persons/url"></fs-fact>
+          <script>
+            const saveable = document.getElementById('saveable');
+            saveable.fact = {
+              type: 'http://gedcomx.org/Birth',
+              date: {
+                original: 'June 4, 1846'
+              },
+              place: {
+                original: 'Cleveland, Ohio'
+              },
+              attribution: {
+                contributor: {
+                  resource: "https://integration.familysearch.org/platform/users/agents/MMJF-TLW",
+                  resourceId: "MMJF-TLW"
+                },
+                changeMessage: "Because because",
+                modified: 1408134300475
+              }
+            };
+            saveable.addEventListener('fact-changed', (e) => {
+              console.log('fact-changed', e.detail.path, e.detail.value);
+            });
+          </script>
+        </template>
+      </demo-snippet>
       <h3>Fact type menu</h3>
       <demo-snippet>
         <template>
