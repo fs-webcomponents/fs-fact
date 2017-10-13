@@ -1,11 +1,12 @@
 {
   "name": "fs-fact",
   "main": "fs-fact.html",
+  "version": "4.0.0",
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
-    "fs-date": "fs-webcomponents/fs-date",
-    "fs-place": "fs-webcomponents/fs-place",
-    "fs-attribution": "fs-webcomponents/fs-attribution",
+    "fs-date": "fs-webcomponents/fs-date#^4.0.0",
+    "fs-place": "fs-webcomponents/fs-place#^4.0.0",
+    "fs-attribution": "fs-webcomponents/fs-attribution#^4.0.0",
     "paper-input": "PolymerElements/paper-input#^2.0.2",
     "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^2.0.0",
     "paper-listbox": "PolymerElements/paper-listbox#^2.0.0",
