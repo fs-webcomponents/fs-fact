@@ -27,6 +27,7 @@
         entity: 'person',
         date: true,
         place: true,
+        vital: true,
         value: false,
         multiple: false,
         deletable: true
@@ -37,6 +38,7 @@
         entity: 'person',
         date: true,
         place: true,
+        vital: true,
         value: false,
         multiple: false,
         deletable: true
@@ -57,6 +59,7 @@
         entity: 'person',
         date: true,
         place: true,
+        vital: true,
         value: false,
         multiple: false,
         deletable: true
@@ -87,6 +90,7 @@
         entity: 'person',
         date: true,
         place: true,
+        vital: true,
         value: false,
         multiple: false,
         deletable: false
@@ -400,6 +404,16 @@
        */
       static supportsPlace(type) {
         return this.isCustom(type) || this.type(type).place;
+      }
+      
+      /**
+       * Check whether a given type is a vital type
+       *
+       * @param {String} type
+       * @return {Boolean}
+       */
+      static isVital(type) {
+        return !this.isCustom(type) && this.type(type).vital === true;
       }
       
       /**
