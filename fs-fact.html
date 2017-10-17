@@ -107,7 +107,7 @@
       
       _setupEditable(editable) {
         if(editable) {
-          Polymer.Async.microTask.run(() => {
+          setTimeout(() => {
             this.shadowRoot.querySelector('#edit').addEventListener('click', (e) => {
               this.edit = true;
               e.preventDefault();
