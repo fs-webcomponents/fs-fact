@@ -46,6 +46,12 @@
             value: function(){
               return [];
             }
+          },
+          
+          /** Whether to filter out vitals when the entityType is 'person' */
+          ignoreVitals: {
+            type: Boolean,
+            value: false
           }
         };
       }
@@ -56,7 +62,9 @@
       }
       
       _updateFactTypes(entityType) {
-        this._setFactTypes(FsFactTypes.types().filter(t => t.entity === entityType));
+        this._setFactTypes(FsFactTypes.types().filter(t => {
+          return t.entity === entityType && (this.ignoreVitals ? !FsFactTypes.isVital(t.type) : true);
+        }));
       }
       
       _selectionChange(event) {
