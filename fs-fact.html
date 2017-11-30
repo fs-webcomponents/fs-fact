@@ -1,6 +1,7 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../polymer/lib/elements/dom-if.html">
 <link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="fs-conclusion.html">
 <link rel="import" href="fs-fact-types.html">
 <link rel="import" href="fs-fact-value.html">
 <link rel="import" href="../fs-api-aware/fs-api-aware.html">
@@ -11,27 +12,6 @@
 
 <dom-module id="fs-fact">
   <template>
-    <style>
-      :host {
-        display: block;
-      }
-      
-      .toolbar {
-        visibility: hidden;
-        text-align: right;
-      }
-      
-      :host(:hover) .toolbar {
-        visibility: visible;
-      }
-    </style>
-    <template is="dom-if" if="[[editable]]">
-      <div class="toolbar">
-        <a id="edit" href hidden$="[[edit]]">Edit</a>
-        <a id="close" href hidden$="[[!edit]]">Close</a>
-        <a id="save" href hidden$="[[!_showSaveButton(edit, saveUrl)]]">Save</a>
-      </div>
-    </template>
     <div>{{_factTypeDisplay(fact.type)}}</div>
     <template is="dom-if" if="{{_supportsValue(fact.type)}}">
       <fs-fact-value value="{{fact.value}}" edit="[[edit]]"></fs-fact-value>
@@ -42,16 +22,13 @@
     <template is="dom-if" if="{{_supportsPlace(fact.type)}}">
       <fs-place place="{{fact.place}}" edit="[[edit]]" client-name="[[clientName]]"></fs-place>
     </template>
-    <template is="dom-if" if="[[editable]]">
-      <fs-attribution 
-        hidden$="[[!edit]]"
-        client-name="[[clientName]]"
-        attribution="{{fact.attribution}}"
-        edit="[[edit]]"></fs-attribution>
-    </template>
   </template>
 
   <script>
+  (function() {
+    
+    let memoizedTemplate;
+    
     /**
      * `fs-fact`
      * 
@@ -60,7 +37,7 @@
      * @polymer
      * @demo demo/index.html
      */
-    class FsFact extends FSApiAwareMixin(Polymer.Element) {
+    class FsFact extends FsConclusion {
       static get is() { return 'fs-fact'; }
       static get properties() {
         return {
@@ -69,41 +46,22 @@
           fact: {
             type: Object,
             notify: true
-          },
-          
-          /**
-           * Whether the fact can be edited. This will show a toolbar when the
-           * user hovers over the fact.
-           */
-          editable: {
-            type: Boolean,
-            value: false,
-            observer: '_setupEditable'
-          },
-          
-          /**
-           * Whether the fact is currently in edit mode
-           */
-          edit: {
-            type: Boolean,
-            value: false
-          },
-          
-          /**
-           * The URL that the fact data will be saved to.
-           */
-          saveUrl: String,
-          
-          /**
-           * Whether the fact is being saved
-           */
-          saving: {
-            type: Boolean,
-            value: false,
-            readOnly: true,
-            notify: true
           }
+          
         };
+      }
+      
+      static get template() {
+        if(!memoizedTemplate) {
+          
+          // Extend the fs-conclusion template by starting with it as the base.
+          memoizedTemplate = document.importNode(FsConclusion.template, true);
+          
+          // Now we add our template, kind of like filling in a slot
+          let factTemplate = Polymer.DomModule.import(this.is, 'template');
+          memoizedTemplate.content.querySelector('#content').appendChild(factTemplate.content);
+        }
+        return memoizedTemplate;
       }
       
       _setupEditable(editable) {
@@ -164,5 +122,6 @@
     }
 
     window.customElements.define(FsFact.is, FsFact);
+  })();
   </script>
 </dom-module>
