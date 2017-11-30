@@ -1,0 +1,109 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../fs-api-aware/fs-api-aware.html">
+<link rel="import" href="../fs-attribution/fs-attribution.html">
+
+<template id="fs-conclusion">
+  <style>
+    :host {
+      display: block;
+    }
+    
+    .toolbar {
+      visibility: hidden;
+      text-align: right;
+    }
+    
+    :host(:hover) .toolbar {
+      visibility: visible;
+    }
+  </style>
+  <template is="dom-if" if="[[editable]]">
+    <div class="toolbar">
+      <a id="edit" href hidden$="[[edit]]">Edit</a>
+      <a id="close" href hidden$="[[!edit]]">Close</a>
+      <a id="save" href hidden$="[[!_showSaveButton(edit, saveUrl)]]">Save</a>
+    </div>
+  </template>
+  <div id="content"></div>
+  <template is="dom-if" if="[[editable]]">
+    <fs-attribution 
+      hidden$="[[!edit]]"
+      client-name="[[clientName]]"
+      attribution="{{fact.attribution}}"
+      edit="[[edit]]"></fs-attribution>
+  </template>
+</template>
+<script>
+(function(){
+  
+  const myDoc = document.currentScript.ownerDocument;
+  const memoizedTemplates = {};
+  
+  /**
+   * `fs-conclusion`
+   * 
+   * Shared code for `fs-fact`, `fs-person-name`, `fs-person-gender`. We want
+   * to share both behavior and a template so create an element that gets
+   * extended. 
+   * 
+   * We might be able to accomplish the same thing with a mixin.
+   *
+   * @customElement
+   * @polymer
+   */
+  window.FsConclusionMixin = Polymer.dedupingMixin((superClass) => class extends FSApiAwareMixin(superClass) {
+   
+    static get properties() {
+      return {
+        
+        /**
+         * Whether the fact can be edited. This will show a toolbar when the
+         * user hovers over the fact.
+         */
+        editable: {
+          type: Boolean,
+          value: false,
+          observer: '_setupEditable'
+        },
+        
+        /**
+         * Whether the fact is currently in edit mode
+         */
+        edit: {
+          type: Boolean,
+          value: false
+        },
+        
+        /**
+         * The URL that the fact data will be saved to.
+         */
+        saveUrl: String,
+        
+        /**
+         * Whether the fact is being saved
+         */
+        saving: {
+          type: Boolean,
+          value: false,
+          readOnly: true,
+          notify: true
+        }
+      };
+    }
+    
+    /**
+     * Here we grap the fs-conclusion-template and fill it in with the base
+     * template of the element that uses this mixin.
+     */
+    static conclusionTemplate(childClass) {
+      if(!memoizedTemplates[childClass]) {
+        memoizedTemplates[childClass] = document.importNode(myDoc.querySelector('#fs-conclusion'), true);
+        let conclusionTemplate = Polymer.DomModule.import(childClass, 'template');
+        memoizedTemplates[childClass].content.querySelector('#content').appendChild(conclusionTemplate.content);
+      }
+      return memoizedTemplates[childClass];
+    }
+    
+  });
+})();
+</script>

@@ -8,7 +8,6 @@
 <link rel="import" href="../fs-date/fs-date.html">
 <link rel="import" href="../fs-place/fs-place.html">
 <link rel="import" href="../fs-request/fs-request.html">
-<link rel="import" href="../fs-attribution/fs-attribution.html">
 
 <dom-module id="fs-fact">
   <template>
@@ -25,10 +24,6 @@
   </template>
 
   <script>
-  (function() {
-    
-    let memoizedTemplate;
-    
     /**
      * `fs-fact`
      * 
@@ -37,8 +32,10 @@
      * @polymer
      * @demo demo/index.html
      */
-    class FsFact extends FsConclusion {
+    class FsFact extends FsConclusionMixin(Polymer.Element) {
+      
       static get is() { return 'fs-fact'; }
+      
       static get properties() {
         return {
           
@@ -52,16 +49,7 @@
       }
       
       static get template() {
-        if(!memoizedTemplate) {
-          
-          // Extend the fs-conclusion template by starting with it as the base.
-          memoizedTemplate = document.importNode(FsConclusion.template, true);
-          
-          // Now we add our template, kind of like filling in a slot
-          let factTemplate = Polymer.DomModule.import(this.is, 'template');
-          memoizedTemplate.content.querySelector('#content').appendChild(factTemplate.content);
-        }
-        return memoizedTemplate;
+        return super.conclusionTemplate(this.is);
       }
       
       _setupEditable(editable) {
@@ -122,6 +110,5 @@
     }
 
     window.customElements.define(FsFact.is, FsFact);
-  })();
   </script>
 </dom-module>
