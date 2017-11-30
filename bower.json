@@ -1,7 +1,7 @@
 {
   "name": "fs-fact",
   "main": "fs-fact.html",
-  "version": "4.2.2",
+  "version": "4.2.3",
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
     "fs-date": "fs-webcomponents/fs-date#^4.0.0",
