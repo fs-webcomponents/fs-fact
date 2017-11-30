@@ -131,6 +131,7 @@
                 request.addEventListener('loading-changed', (e) => {
                   this._setSaving(e.detail.value);
                 });
+                request.ready();
                 request.generateRequest();
               }
             });
