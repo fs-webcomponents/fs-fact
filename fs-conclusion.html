@@ -29,7 +29,7 @@
     <fs-attribution 
       hidden$="[[!edit]]"
       client-name="[[clientName]]"
-      attribution="{{fact.attribution}}"
+      attribution="{{conclusion.attribution}}"
       edit="[[edit]]"></fs-attribution>
   </template>
 </template>
@@ -56,9 +56,14 @@
     static get properties() {
       return {
         
+        conclusion: {
+          type: Object,
+          notify: true
+        },
+        
         /**
-         * Whether the fact can be edited. This will show a toolbar when the
-         * user hovers over the fact.
+         * Whether the conclusion can be edited. This will show a toolbar when the
+         * user hovers over the conclusion.
          */
         editable: {
           type: Boolean,
@@ -67,7 +72,7 @@
         },
         
         /**
-         * Whether the fact is currently in edit mode
+         * Whether the conclusion is currently in edit mode
          */
         edit: {
           type: Boolean,
@@ -75,12 +80,12 @@
         },
         
         /**
-         * The URL that the fact data will be saved to.
+         * The URL that the conclusion data will be saved to.
          */
         saveUrl: String,
         
         /**
-         * Whether the fact is being saved
+         * Whether the conclusion is being saved
          */
         saving: {
           type: Boolean,
@@ -102,6 +107,10 @@
         memoizedTemplates[childClass].content.querySelector('#content').appendChild(conclusionTemplate.content);
       }
       return memoizedTemplates[childClass];
+    }
+      
+    _showSaveButton(edit, saveUrl) {
+      return edit && saveUrl;
     }
     
   });

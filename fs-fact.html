@@ -42,7 +42,8 @@
           /** Fact data */
           fact: {
             type: Object,
-            notify: true
+            notify: true,
+            observer: '_conclusionSync'
           }
           
         };
@@ -50,6 +51,10 @@
       
       static get template() {
         return super.conclusionTemplate(this.is);
+      }
+      
+      _conclusionSync(fact) {
+        this.conclusion = fact;
       }
       
       _setupEditable(editable) {
@@ -86,10 +91,6 @@
             });
           });
         }
-      }
-      
-      _showSaveButton(edit, saveUrl) {
-        return edit && saveUrl;
       }
       
       _factTypeDisplay(type) {
